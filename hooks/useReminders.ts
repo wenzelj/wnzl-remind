@@ -5,6 +5,10 @@ export interface Reminder {
   id: string;
   title: string;
   description: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  color: string;
 }
 
 const REMINDERS_KEY = 'reminders';

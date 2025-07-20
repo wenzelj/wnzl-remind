@@ -63,8 +63,8 @@ export default function CreateReminderScreen() {
     return defaultSource || sources[0];
   }
 
-  const handleSubmit = async (title: string, description: string) => {
-    await addReminder({ title, description });
+  const handleSubmit = async (title: string, description: string, date: Date, startTime: Date, endTime: Date, color: string) => {
+    await addReminder({ title, description, date: date.toISOString(), startTime: startTime.toISOString(), endTime: endTime.toISOString(), color });
 
     if (!calendarId) {
       Alert.alert('Calendar permission not granted');
@@ -75,8 +75,8 @@ export default function CreateReminderScreen() {
     const event = {
       title,
       notes: description,
-      startDate: new Date(),
-      endDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day from now
+      startDate: startTime,
+      endDate: endTime,
       timeZone: 'GMT',
     };
 

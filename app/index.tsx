@@ -42,8 +42,7 @@ export default function HomeScreen() {
         data={filteredReminders}
         renderItem={({ item }) => (
           <ReminderCard
-            title={item.title}
-            description={item.description}
+            {...item}
             onEdit={() => handleEdit(item.id)}
             onDelete={() => deleteReminder(item.id)}
           />

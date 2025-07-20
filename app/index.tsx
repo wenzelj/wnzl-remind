@@ -49,6 +49,7 @@ export default function HomeScreen() {
           />
         )}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={<Text style={{ color: theme.text, textAlign: 'center', marginTop: 20 }}>No reminders yet. Add one!</Text>}
       />
       <Link href="/create" asChild>
         <TouchableOpacity style={[styles.fab, { backgroundColor: theme.fab }]}>

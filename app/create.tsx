@@ -4,7 +4,6 @@ import ReminderForm from '../components/ReminderForm';
 import { useRouter } from 'expo-router';
 import * as Calendar from 'expo-calendar';
 import { useReminders } from '../hooks/useReminders';
-import { pushNotificationService } from '../services/PushNotification';
 
 export default function CreateReminderScreen() {
   const router = useRouter();
@@ -27,9 +26,9 @@ export default function CreateReminderScreen() {
         }
       }
     })();
-  }, []);
+  }, [createCalendar]);
 
-  async function createCalendar() {
+  const createCalendar = React.useCallback(async () => {
     const defaultCalendarSource =
       Platform.OS === 'ios'
         ? await getDefaultCalendarSource()
@@ -45,7 +44,7 @@ export default function CreateReminderScreen() {
       accessLevel: Calendar.CalendarAccessLevel.OWNER,
     });
     return newCalendarID;
-  }
+  }, []);
 
   async function getDefaultCalendarSource() {
     const sources = await Calendar.getSourcesAsync();
@@ -57,11 +56,6 @@ export default function CreateReminderScreen() {
 
   const handleSubmit = async (title: string, description: string) => {
     await addReminder({ title, description });
-    pushNotificationService.localNotificationSchedule(
-      `Reminder: ${title}`,
-      description,
-      new Date(Date.now() + 5 * 1000) // 5 seconds from now
-    );
 
     if (!calendarId) {
       Alert.alert('Calendar permission not granted');

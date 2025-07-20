@@ -10,9 +10,9 @@ interface ReminderFormProps {
 const ReminderForm: React.FC<ReminderFormProps> = ({ onSubmit, initialValues }) => {
   const [title, setTitle] = useState(initialValues?.title || '');
   const [description, setDescription] = useState(initialValues?.description || '');
-  const [date, setDate] = useState(initialValues?.date || new Date());
-  const [startTime, setStartTime] = useState(initialValues?.startTime || new Date());
-  const [endTime, setEndTime] = useState(initialValues?.endTime || new Date());
+  const [date, setDate] = useState(initialValues?.date ? new Date(initialValues.date) : new Date());
+  const [startTime, setStartTime] = useState(initialValues?.startTime ? new Date(initialValues.startTime) : new Date());
+  const [endTime, setEndTime] = useState(initialValues?.endTime ? new Date(initialValues.endTime) : new Date());
   const [color, setColor] = useState(initialValues?.color || 'blue');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);

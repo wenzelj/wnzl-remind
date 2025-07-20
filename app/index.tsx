@@ -24,7 +24,7 @@ export default function HomeScreen() {
     if (reminder) {
       router.push({
         pathname: '/edit',
-        params: { id: reminder.id, title: reminder.title, description: reminder.description },
+        params: { ...reminder },
       });
     }
   };

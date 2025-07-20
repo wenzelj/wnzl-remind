@@ -42,14 +42,19 @@ export default function HomeScreen() {
         data={filteredReminders}
         renderItem={({ item }) => (
           <ReminderCard
-            title={item.title}
-            description={item.description}
+            {...item}
             onEdit={() => handleEdit(item.id)}
             onDelete={() => deleteReminder(item.id)}
           />
         )}
         keyExtractor={(item) => item.id}
-        ListEmptyComponent={<Text style={{ color: theme.text, textAlign: 'center', marginTop: 20 }}>No reminders yet. Add one!</Text>}
+        ListEmptyComponent={
+          <TouchableOpacity onPress={() => router.push('/create')}>
+            <Text style={{ color: theme.text, textAlign: 'center', marginTop: 20 }}>
+              No reminders yet. Add one!
+            </Text>
+          </TouchableOpacity>
+        }
       />
       <Link href="/create" asChild>
         <TouchableOpacity style={[styles.fab, { backgroundColor: theme.fab }]}>

@@ -6,19 +6,25 @@ import { lightTheme, darkTheme } from '../constants/themes';
 interface ReminderCardProps {
   title: string;
   description: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  color: string;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const ReminderCard: React.FC<ReminderCardProps> = ({ title, description, onEdit, onDelete }) => {
+const ReminderCard: React.FC<ReminderCardProps> = ({ title, description, date, startTime, endTime, color, onEdit, onDelete }) => {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.card }]}>
+    <View style={[styles.card, { backgroundColor: theme.card, borderLeftColor: color, borderLeftWidth: 5 }]}>
       <View style={styles.textContainer}>
         <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
         <Text style={{ color: theme.text }}>{description}</Text>
+        <Text style={styles.time}>{new Date(date).toDateString()}</Text>
+        <Text style={styles.time}>{new Date(startTime).toLocaleTimeString()} - {new Date(endTime).toLocaleTimeString()}</Text>
       </View>
       <View style={styles.actions}>
         <TouchableOpacity onPress={onEdit}>
@@ -47,6 +53,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
+  },
+  time: {
+    fontSize: 12,
+    color: 'gray',
   },
   actions: {
     flexDirection: 'row',

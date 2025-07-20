@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, useColorScheme } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, useColorScheme, Text } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import ReminderCard from '../components/ReminderCard';

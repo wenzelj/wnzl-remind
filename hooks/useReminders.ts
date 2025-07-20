@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Calendar from 'expo-calendar';
 import { Platform } from 'react-native';
 
+import { Availability, RecurrenceRule } from 'expo-calendar';
+
 export interface Reminder {
   id: string;
   title: string;
@@ -12,6 +14,11 @@ export interface Reminder {
   endTime: string;
   color: string;
   calendarEventId?: string;
+  availability: Availability;
+  recurrenceRule: RecurrenceRule;
+  location: string;
+  url: string;
+  timeZone: string;
 }
 
 const REMINDERS_KEY = 'reminders';
@@ -96,7 +103,11 @@ export function useReminders() {
         notes: newReminder.description,
         startDate: new Date(newReminder.startTime),
         endDate: new Date(newReminder.endTime),
-        timeZone: 'GMT',
+        timeZone: newReminder.timeZone,
+        availability: newReminder.availability,
+        recurrenceRule: newReminder.recurrenceRule,
+        location: newReminder.location,
+        url: newReminder.url,
       });
     }
 
@@ -112,7 +123,11 @@ export function useReminders() {
         notes: updatedReminder.description,
         startDate: new Date(updatedReminder.startTime),
         endDate: new Date(updatedReminder.endTime),
-        timeZone: 'GMT',
+        timeZone: updatedReminder.timeZone,
+        availability: updatedReminder.availability,
+        recurrenceRule: updatedReminder.recurrenceRule,
+        location: updatedReminder.location,
+        url: updatedReminder.url,
       });
     }
 
@@ -125,7 +140,9 @@ export function useReminders() {
   const deleteReminder = async (id: string) => {
     const reminderToDelete = reminders.find(r => r.id === id);
     if (reminderToDelete && reminderToDelete.calendarEventId) {
-      await Calendar.deleteEventAsync(reminderToDelete.calendarEventId);
+      await Calendar.deleteEventAsync(reminderToDelete.calendarEventId, {
+        futureEvents: true,
+      });
     }
 
     const newReminders = reminders.filter((r) => r.id !== id);

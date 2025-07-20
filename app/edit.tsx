@@ -3,13 +3,14 @@ import { View, StyleSheet } from 'react-native';
 import ReminderForm from '../components/ReminderForm';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useReminders } from '../hooks/useReminders';
+import { Availability, RecurrenceRule } from 'expo-calendar';
 
 export default function EditReminderScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { updateReminder } = useReminders();
 
-  const handleSubmit = (newTitle: string, newDescription: string, newDate: Date, newStartTime: Date, newEndTime: Date, newColor: string) => {
+  const handleSubmit = (newTitle: string, newDescription: string, newDate: Date, newStartTime: Date, newEndTime: Date, newColor: string, newAvailability: Availability, newRecurrenceRule: RecurrenceRule, newLocation: string, newUrl: string, newTimeZone: string) => {
     updateReminder({
       ...(params as any),
       title: newTitle,
@@ -18,6 +19,11 @@ export default function EditReminderScreen() {
       startTime: newStartTime.toISOString(),
       endTime: newEndTime.toISOString(),
       color: newColor,
+      availability: newAvailability,
+      recurrenceRule: newRecurrenceRule,
+      location: newLocation,
+      url: newUrl,
+      timeZone: newTimeZone,
     });
     router.back();
   };

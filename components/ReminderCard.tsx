@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { lightTheme, darkTheme } from '../constants/themes';
+import { Availability, RecurrenceRule } from 'expo-calendar';
 
 interface ReminderCardProps {
   title: string;
@@ -10,11 +11,15 @@ interface ReminderCardProps {
   startTime: string;
   endTime: string;
   color: string;
+  availability: Availability;
+  recurrenceRule: RecurrenceRule;
+  location: string;
+  url: string;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const ReminderCard: React.FC<ReminderCardProps> = ({ title, description, date, startTime, endTime, color, onEdit, onDelete }) => {
+const ReminderCard: React.FC<ReminderCardProps> = ({ title, description, date, startTime, endTime, color, availability, recurrenceRule, location, url, onEdit, onDelete }) => {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
@@ -25,6 +30,10 @@ const ReminderCard: React.FC<ReminderCardProps> = ({ title, description, date, s
         <Text style={{ color: theme.text }}>{description}</Text>
         <Text style={styles.time}>{new Date(date).toDateString()}</Text>
         <Text style={styles.time}>{new Date(startTime).toLocaleTimeString()} - {new Date(endTime).toLocaleTimeString()}</Text>
+        <Text style={styles.time}>Availability: {availability}</Text>
+        <Text style={styles.time}>Location: {location}</Text>
+        <Text style={styles.time}>URL: {url}</Text>
+        <Text style={styles.time}>Repeats: {recurrenceRule?.frequency}</Text>
       </View>
       <View style={styles.actions}>
         <TouchableOpacity onPress={onEdit}>

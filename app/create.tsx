@@ -3,16 +3,8 @@ import { View, StyleSheet, Platform, Alert } from 'react-native';
 import ReminderForm from '../components/ReminderForm';
 import { useRouter } from 'expo-router';
 import * as Calendar from 'expo-calendar';
-import * as Notifications from 'expo-notifications';
 import { useReminders } from '../hooks/useReminders';
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+import { pushNotificationService } from '../services/PushNotification';
 
 export default function CreateReminderScreen() {
   const router = useRouter();
@@ -65,7 +57,11 @@ export default function CreateReminderScreen() {
 
   const handleSubmit = async (title: string, description: string) => {
     await addReminder({ title, description });
-    await scheduleNotification(title, description);
+    pushNotificationService.localNotificationSchedule(
+      `Reminder: ${title}`,
+      description,
+      new Date(Date.now() + 5 * 1000) // 5 seconds from now
+    );
 
     if (!calendarId) {
       Alert.alert('Calendar permission not granted');
@@ -90,16 +86,6 @@ export default function CreateReminderScreen() {
       router.back();
     }
   };
-
-  async function scheduleNotification(title: string, description: string) {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: `Reminder: ${title}`,
-        body: description,
-      },
-      trigger: { seconds: 5 }, // For demonstration, trigger in 5 seconds
-    });
-  }
 
   return (
     <View style={styles.container}>

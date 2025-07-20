@@ -6,11 +6,19 @@ import { useReminders } from '../hooks/useReminders';
 
 export default function EditReminderScreen() {
   const router = useRouter();
-  const { id, title, description } = useLocalSearchParams();
+  const params = useLocalSearchParams();
   const { updateReminder } = useReminders();
 
-  const handleSubmit = (newTitle: string, newDescription: string) => {
-    updateReminder({ id: id as string, title: newTitle, description: newDescription });
+  const handleSubmit = (newTitle: string, newDescription: string, newDate: Date, newStartTime: Date, newEndTime: Date, newColor: string) => {
+    updateReminder({
+      ...(params as any),
+      title: newTitle,
+      description: newDescription,
+      date: newDate.toISOString(),
+      startTime: newStartTime.toISOString(),
+      endTime: newEndTime.toISOString(),
+      color: newColor,
+    });
     router.back();
   };
 
@@ -18,7 +26,7 @@ export default function EditReminderScreen() {
     <View style={styles.container}>
       <ReminderForm
         onSubmit={handleSubmit}
-        initialValues={{ title: title as string, description: description as string }}
+        initialValues={params}
       />
     </View>
   );

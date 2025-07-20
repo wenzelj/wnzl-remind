@@ -10,6 +10,31 @@ export default function CreateReminderScreen() {
   const { addReminder } = useReminders();
   const [calendarId, setCalendarId] = useState<string | null>(null);
 
+  const createCalendar = React.useCallback(async () => {
+    const defaultCalendarSource =
+      Platform.OS === 'ios'
+        ? await getDefaultCalendarSource()
+        : { isLocalAccount: true, name: 'Expo Calendar', type: Calendar.SourceType.LOCAL as Calendar.SourceType };
+    const calendarConfig = {
+      title: 'Expo Reminder App',
+      color: 'blue',
+      entityType: Calendar.EntityTypes.EVENT,
+      source: defaultCalendarSource,
+      name: 'internalCalendarName',
+      ownerAccount: 'personal',
+      accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    };
+
+    // Only add sourceId if it exists
+    if ('id' in defaultCalendarSource && defaultCalendarSource.id) {
+      // @ts-ignore
+      calendarConfig.sourceId = defaultCalendarSource.id;
+    }
+
+    const newCalendarID = await Calendar.createCalendarAsync(calendarConfig);
+    return newCalendarID;
+  }, []);
+
   useEffect(() => {
     (async () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
@@ -28,23 +53,7 @@ export default function CreateReminderScreen() {
     })();
   }, [createCalendar]);
 
-  const createCalendar = React.useCallback(async () => {
-    const defaultCalendarSource =
-      Platform.OS === 'ios'
-        ? await getDefaultCalendarSource()
-        : { isLocalAccount: true, name: 'Expo Calendar' };
-    const newCalendarID = await Calendar.createCalendarAsync({
-      title: 'Expo Reminder App',
-      color: 'blue',
-      entityType: Calendar.EntityTypes.EVENT,
-      sourceId: defaultCalendarSource.id,
-      source: defaultCalendarSource,
-      name: 'internalCalendarName',
-      ownerAccount: 'personal',
-      accessLevel: Calendar.CalendarAccessLevel.OWNER,
-    });
-    return newCalendarID;
-  }, []);
+
 
   async function getDefaultCalendarSource() {
     const sources = await Calendar.getSourcesAsync();
